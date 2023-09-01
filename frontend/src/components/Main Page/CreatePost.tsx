@@ -21,12 +21,19 @@ function CreatePost() {
   const handlePost = (e: any) => {
     e.preventDefault()
     const res = axios
-      .post("http://localhost:5000/users/createpost", {
-        message,
-      })
+      .post(
+        "http://localhost:5000/users/createpost",
+        {
+          message,
+        },
+        { withCredentials: true }
+      )
       .then((res) => {
         setMessage("")
         console.log(res.data)
+        setTimeout(() => {
+          window.location.reload()
+        }, 500)
       })
       .catch((err) => {
         console.log(err)

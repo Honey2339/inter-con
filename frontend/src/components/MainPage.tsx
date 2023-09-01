@@ -1,5 +1,5 @@
 import { Box, Container, Card, Typography, Button } from "@mui/material"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import Cookies from "js-cookie"
 import Navigator from "./Main Page/Navigator"
@@ -7,6 +7,14 @@ import Chats from "./Main Page/Chats"
 import NewsFeed from "./Main Page/NewsFeed"
 import MainFeed from "./Main Page/MainFeed"
 import CreatePost from "./Main Page/CreatePost"
+import axios from "axios"
+import Friends from "./Main Page/Friends"
+
+interface Chat {
+  id: number
+  username: string
+  message: string
+}
 
 function MainPage() {
   const navigate = useNavigate()
@@ -15,6 +23,18 @@ function MainPage() {
     if (!verify) {
       navigate("/")
     }
+  }, [])
+  const [chats, setChats] = useState<Chat[]>([])
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/users/getpost")
+      .then((res) => {
+        setChats(res.data.allpost)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }, [])
 
   return (
@@ -25,10 +45,14 @@ function MainPage() {
       </Box>
       <Box justifyContent="center">
         <CreatePost />
-        <MainFeed />
+        {chats &&
+          chats.map((chat) => (
+            <MainFeed username={chat.username} message={chat.message} />
+          ))}
       </Box>
       <Box mr="20px" flex="0 0 280px">
         <Chats />
+        <Friends />
       </Box>
     </Box>
   )

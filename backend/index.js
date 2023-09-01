@@ -8,8 +8,8 @@ const app = express()
 require("dotenv").config()
 let MONGO_URL = process.env.MONGO_URL
 app.use(express.json())
-app.use(cors())
 app.use(cookieParser())
+app.use(cors({ credentials: true, origin: "http://localhost:5173" }))
 
 app.use("/users", userRoutes)
 
